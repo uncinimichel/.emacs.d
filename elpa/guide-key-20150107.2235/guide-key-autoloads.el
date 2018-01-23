@@ -1,14 +1,16 @@
 ;;; guide-key-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "guide-key" "guide-key.el" (22024 17148 0 0))
+;;;### (autoloads nil "guide-key" "guide-key.el" (23142 59350 882800
+;;;;;;  496000))
 ;;; Generated autoloads from guide-key.el
 
 (defvar guide-key-mode nil "\
 Non-nil if Guide-Key mode is enabled.
-See the command `guide-key-mode' for a description of this minor mode.
+See the `guide-key-mode' command
+for a description of this minor mode.
 Setting this variable directly does not take effect;
 either customize it (see the info node `Easy Customization')
 or call the function `guide-key-mode'.")

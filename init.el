@@ -66,18 +66,48 @@
     tagedit
 
     ;; git integration
-    magit))
+    ;;    magit
+    git-gutter
+
+    ;; complete anything
+    company
+
+    ;; aggressive identation
+    aggressive-indent
+
+    ;; neotree
+    neotree
+
+    ;; flycheck
+    flycheck
+
+    ;; nyan-mode - the cat but I think that it slow down the system too much
+    ;;    nyan-mode
+
+    ;; guide-key
+    guide-key
+
+    ;; clj-refractor
+    clj-refactor
+
+    ;; exec-path-from-shell
+    exec-path-from-shell
+
+    ;; expand-region
+    expand-region
+    ))
+
 
 ;; On OS X, an Emacs instance started from the graphical user
 ;; interface will have a different environment than a shell in a
-;; terminal window, because OS X does not run a shell during the
+;; terminal window, because OS X does not n a shell during the
 ;; login. Obviously this will lead to unexpected results when
 ;; calling external utilities like make from Emacs.
 ;; This library works around this problem by copying important
 ;; environment variables from the user's shell.
 ;; https://github.com/purcell/exec-path-from-shell
-(if (eq system-type 'darwin)
-    (add-to-list 'my-packages 'exec-path-from-shell))
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -140,22 +170,22 @@
 
 
 ;; Font
-(set-face-attribute 'default nil :font  "Inconsolata" )
-(set-face-attribute 'default t :font  "Inconsolata" )
-(set-face-attribute 'default nil :height 150)
+;;(set-face-attribute 'default nil :font  "Inconsolata" )
+;;(set-face-attribute 'default t :font  "Inconsolata" )
+;;(set-face-attribute 'default nil :height 150)
 
 
 ;; Scroll one line
 (setq scroll-conservatively most-positive-fixnum)
 (setq scroll-margin 10)
 
-(require 'flx-ido)
-(ido-mode 1)
-(ido-everywhere 1)
-(flx-ido-mode 1)
-;; disable ido faces to see flx highlights.
-(setq ido-enable-flex-matching t)
-(setq ido-use-faces nil)
+;; (require 'flx-ido)
+;; (ido-mode 1)
+;; (ido-everywhere 1)
+;; (flx-ido-mode 1)
+;; ;; disable ido faces to see flx highlights.
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-use-faces nil)
 
 ;; Emmet
 (require 'emmet-mode)
@@ -177,7 +207,7 @@
 (powerline-default-theme)
 
 ;; NeoTree
-;; (add-to-list 'load-path "~/.emacs.d/neotree")
+;;(add-to-list 'load-path "~/.emacs.d/neotree")
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 
@@ -187,6 +217,7 @@
 
 ;; Company Mode
 (setq company-idle-delay 0)
+(global-company-mode)
 
 ;; Emmet
 (global-set-key [C-tab] 'emmet-expand-line)
@@ -197,10 +228,10 @@
 (global-set-key (kbd "C-c f") 'projectile-find-file)
 
 ;; Nyan Mode
-(require 'nyan-mode)
-(nyan-mode 1)
-(setq nyan-wavy-trail t)
-(nyan-start-animation)
+;;(require 'nyan-mode)
+;;(nyan-mode 1)
+;;(setq nyan-wavy-trail t)
+                                        ;(nyan-start-animation)
 
 ;; Expand Region
 (global-set-key (kbd "C-x C-b") 'er/expand-region)
@@ -214,13 +245,13 @@
 (setq-default indent-tabs-mode nil)
 
 ;; Fuzzy
-(require 'auto-complete-config)
-(ac-config-default)
-(define-key ac-completing-map "\t" nil)
-(define-key ac-completing-map [tab] nil)
+;;(require 'auto-complete-config)
+;;(ac-config-default)
+;;(define-key ac-completing-map "\t" nil)
+;;(define-key ac-completing-map [tab] nil)
 
 ;; Emacs Theme
-(load-theme 'seti t)
+;;(load-theme 'seti t)
 
 ;; Unindent by 2 Spaces(global-set-key (kbd "<S-tab>") 'un-indent-by-removing-4-spaces)
 (global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
@@ -248,24 +279,68 @@
 
 
 ;; Highlight 80 column
-(require 'fill-column-indicator)
-(fci-mode 1)
+;;(require 'fill-column-indicator)
+;;(fci-mode 1)
 ;; (setq fci-rule-width 1)
-(setq-default fill-column 80)
-  (define-globalized-minor-mode global-fci-mode fci-mode
-    (lambda ()
-      (if (and
-           (not (string-match "^\*.*\*$" (buffer-name)))
-           (not (eq major-mode 'dired-mode)))
-          (fci-mode 1))))
-  (global-fci-mode 1)
+;; (setq-default fill-column 80)
+;;   (define-globalized-minor-mode global-fci-mode fci-mode
+;;     (lambda ()
+;;       (if (and
+;;            (not (string-match "^\*.*\*$" (buffer-name)))
+;;            (not (eq major-mode 'dired-mode)))
+;;           (fci-mode 1))))
+;;   (global-fci-mode 1)
 
 
 ;; Delete selection on type
 (delete-selection-mode 1)
 
 ;; Yasnippet
-(require 'yasnippet)
-(yas-global-mode 1)
+;;(require 'yasnippet)
+;;(yas-global-mode 1)
 
-(global-set-key (kbd "\t") 'yas-expand)
+;;(global-set-key (kbd "\t") 'yas-expand)
+
+;; Enable paredit
+(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+
+;; Enable aggressive indent
+(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+(add-hook 'css-mode-hook #'aggressive-indent-mode)
+(global-git-gutter-mode +1)
+
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+
+
+(defun my-clojure-mode-hook ()
+  (clj-refactor-mode 1)
+  (yas-minor-mode 1) ; for adding require/use/import statements
+  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  (cljr-add-keybindings-with-prefix "C-c C-n"))
+
+(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(coffee-tab-width 2)
+ '(package-selected-packages
+   (quote
+    (git-gutter undo-tree tagedit smex rainbow-delimiters projectile paredit nyan-mode neotree magit ido-ubiquitous guide-key flycheck exec-path-from-shell company clojure-mode-extra-font-locking cider aggressive-indent ag))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
